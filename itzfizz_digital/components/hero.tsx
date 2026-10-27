@@ -17,7 +17,11 @@ function Letters({ text }: { text: string }) {
       {[...text].map((ch, i) => (
         <span
           key={i}
-          className={ch === " " ? "headline-char space" : "headline-char"}
+          className={
+            ch === " "
+              ? "inline-block min-w-[0.3em]"
+              : "inline-block min-w-[0.52em] md:min-w-[0.55em]"
+          }
           aria-hidden="true"
         >
           {ch === " " ? " " : ch}
@@ -294,44 +298,84 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero" id="hero" ref={heroRef}>
-      <header className="navbar">
-        <a href="#hero" className="brand" aria-label="ITZFIZZ home">
-          <span className="brand-icon">IF</span>
+    <section
+      className="hero hero-bg relative isolate h-svh min-h-[560px] overflow-hidden"
+      id="hero"
+      ref={heroRef}
+    >
+      {/* ---------- Navbar ---------- */}
+      <header className="navbar absolute top-0 left-0 z-10 flex h-[65px] w-full items-center justify-between px-[5%] md:h-[78px] md:px-[6%]">
+        <a
+          href="#hero"
+          className="flex items-center gap-2.5 text-[13px] font-extrabold tracking-[1.6px]"
+          aria-label="ITZFIZZ home"
+        >
+          <span className="grid size-9 place-items-center rounded-full bg-ink text-[11px] tracking-normal text-green shadow-[0_6px_16px_-6px_rgba(23,25,20,0.5)]">
+            IF
+          </span>
           <span>ITZFIZZ</span>
         </a>
-        <span className="nav-caption">MOVE DIFFERENT.</span>
-        <a href="#next-section" className="nav-link">
-          OUR IMPACT <span>↗</span>
+
+        <span className="hidden text-[10px] font-extrabold tracking-[3px] text-muted md:block">
+          MOVE DIFFERENT.
+        </span>
+
+        <a
+          href="#next-section"
+          className="group inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/60 px-[13px] py-2 text-[9px] font-extrabold tracking-[2px] backdrop-blur-sm transition-colors duration-300 ease-out-expo hover:border-green hover:bg-green md:px-4 md:py-2.5 md:text-[10px]"
+        >
+          OUR IMPACT
+          <span className="text-sm transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            ↗
+          </span>
         </a>
       </header>
 
-      <div className="stage">
+      {/* ---------- Stage: cards → road → tagline ---------- */}
+      <div className="stage absolute inset-x-0 top-[65px] bottom-14 flex flex-col md:top-[78px] md:bottom-16">
         {/* Stat cards sit above the road; each one switches on when the car passes it */}
-        <div className="stats-row">
+        <div className="pointer-events-none relative z-[3] mb-3.5 grid min-h-0 flex-[1_1_0] grid-cols-2 content-end items-stretch gap-2.5 px-[5%] md:mb-9 md:grid-cols-4 md:items-end md:gap-[clamp(12px,2vw,28px)] md:px-[6%]">
           {STATS.map((s) => (
             <article
-              className="stat-card"
               key={s.tag}
               style={{ "--value": `${s.value}%` } as React.CSSProperties}
+              className="stat-card group relative translate-y-7 scale-95 rounded-[14px] border border-white/90 bg-linear-to-br from-white/95 to-white/70 p-3 opacity-0 shadow-[0_0_0_1px_rgba(23,25,20,0.09),0_2px_6px_rgba(23,25,20,0.04),0_22px_44px_-22px_rgba(23,25,20,0.35)] backdrop-blur-xl transition duration-700 ease-out-expo will-change-[opacity,transform] md:rounded-[18px] md:p-5 md:pb-5
+                before:absolute before:top-[calc(100%+30px)] before:left-[calc(50%-4px)] before:size-[9px] before:scale-0 before:rounded-full before:bg-green before:shadow-[0_0_0_2px_#171914,0_0_0_6px_rgba(200,243,106,0.4)] before:transition-transform before:delay-[400ms] before:duration-[400ms] before:ease-out-expo max-md:before:hidden
+                after:absolute after:top-full after:left-1/2 after:h-[34px] after:w-px after:origin-top after:scale-y-0 after:bg-linear-to-b after:from-ink/5 after:to-ink/50 after:transition-transform after:delay-150 after:duration-500 after:ease-out-expo max-md:after:hidden
+                [&.is-on]:translate-y-0 [&.is-on]:scale-100 [&.is-on]:opacity-100 [&.is-on]:before:scale-100 [&.is-on]:after:scale-y-100"
             >
-              <div className="stat-top">
-                <span className="stat-tag">{s.tag}</span>
-                <span className="stat-mark">{s.mark}</span>
+              <div className="stat-top mb-2 flex items-center justify-between before:absolute before:top-0 before:left-3 before:h-[3px] before:w-7 before:rounded-b-sm before:bg-green-dark md:mb-3.5 md:before:left-5 md:before:w-[38px]">
+                <span className="text-[8px] font-extrabold tracking-[1.2px] text-muted uppercase md:text-[10px] md:tracking-[1.8px]">
+                  {s.tag}
+                </span>
+                <span className="grid size-5 place-items-center rounded-full bg-ink text-[11px] leading-none text-green md:size-[26px] md:text-[13px]">
+                  {s.mark}
+                </span>
               </div>
-              <span className="stat-number" data-count={s.value}>
+
+              <span
+                className="stat-number block font-display text-[38px] leading-[0.95] tracking-[1px] text-ink tabular-nums max-[380px]:text-[32px] md:text-[length:clamp(44px,5.2vw,76px)]"
+                data-count={s.value}
+              >
                 {s.value}%
               </span>
-              <p>{s.text}</p>
-              <div className="stat-bar">
-                <i />
+
+              <p className="mt-1 max-w-[190px] text-[10.5px] leading-[1.4] font-semibold text-[#5d6157] max-[380px]:text-[9.5px] md:mt-2 md:text-xs md:leading-normal [@media(max-height:700px)_and_(min-width:768px)]:hidden">
+                {s.text}
+              </p>
+
+              <div className="mt-4 h-[5px] overflow-hidden rounded-full bg-ink/10 max-md:hidden [@media(max-height:700px)_and_(min-width:768px)]:mt-2.5">
+                <i className="block h-full w-(--value) origin-left scale-x-0 rounded-[inherit] bg-linear-to-r from-green-dark to-green transition-transform delay-[250ms] duration-[1100ms] ease-out-expo group-[.is-on]:scale-x-100" />
               </div>
             </article>
           ))}
         </div>
 
         {/* Road + headline + car */}
-        <div className="road-area" aria-label="Car driving across a road">
+        <div
+          className="road-area relative z-[2] h-(--road-h) flex-none"
+          aria-label="Car driving across a road"
+        >
           <div className="road">
             <div className="road-edge" />
             <div className="road-center-line" />
@@ -340,32 +384,41 @@ export default function Hero() {
           </div>
 
           {/* Headline lives between the road and the car: the car drives in front of it */}
-          <div className="headline-wrap">
-            <h1 className="headline" id="headline" aria-label="WELCOME ITZ FIZZ">
-              <span className="headline-line">
+          <div className="pointer-events-none absolute inset-0 z-[3] grid place-items-center">
+            <h1
+              id="headline"
+              aria-label="WELCOME ITZ FIZZ"
+              className="[grid-area:1/1] font-display text-[length:min(calc(var(--road-h)_*_0.4),14vw)] leading-[0.92] font-normal tracking-[0.07em] text-transparent select-none md:tracking-[0.12em]"
+            >
+              <span className="flex justify-center whitespace-nowrap">
                 <Letters text="WELCOME" />
               </span>
-              <span className="headline-line second-line">
+              <span className="mt-1 flex justify-center whitespace-nowrap">
                 <Letters text="ITZ FIZZ" />
               </span>
             </h1>
-            <div className="headline headline-fill" id="headline-fill" aria-hidden="true">
-              <span className="headline-line">
+
+            <div
+              id="headline-fill"
+              aria-hidden="true"
+              className="headline-fill [grid-area:1/1] font-display text-[length:min(calc(var(--road-h)_*_0.4),14vw)] leading-[0.92] font-normal tracking-[0.07em] text-ink select-none md:tracking-[0.12em]"
+            >
+              <span className="flex justify-center whitespace-nowrap">
                 <Letters text="WELCOME" />
               </span>
-              <span className="headline-line second-line">
+              <span className="mt-1 flex justify-center whitespace-nowrap">
                 <Letters text="ITZ FIZZ" />
               </span>
             </div>
           </div>
 
           <div
-            className="car-wrap"
             id="car-wrap"
             role="img"
             aria-label="Graphite sports car viewed from above, driving left to right"
+            className="car-wrap absolute inset-y-0 left-0 z-[4] flex w-[clamp(110px,30vw,170px)] items-center will-change-transform max-[380px]:w-[100px] md:w-[clamp(120px,16vw,270px)]"
           >
-            <div className="car-body" id="car-body">
+            <div id="car-body" className="relative w-full will-change-transform">
               <div className="speed-lines" id="speed-lines" aria-hidden="true">
                 <i />
                 <i />
@@ -375,7 +428,7 @@ export default function Hero() {
               <div className="beam" id="beam" aria-hidden="true" />
 
               {/* Top-down car rotated 90° so the nose points along the road (to the right) */}
-              <svg className="car-svg" viewBox="-80 80 340 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <svg className="relative z-[2] block h-auto w-full overflow-visible drop-shadow-[0_8px_6px_rgba(0,0,0,0.35)]" viewBox="-80 80 340 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
                   
                   <linearGradient id="carPaint" x1="0" y1="0" x2="1" y2="0">
@@ -574,18 +627,23 @@ export default function Hero() {
         </div>
 
         {/* Tagline below the road */}
-        <div className="hero-content">
-          <p className="eyebrow">A LITTLE CHANGE. A BIG IMPACT.</p>
-          <p className="hero-description">EVERY JOURNEY STARTS WITH A LITTLE MOMENTUM.</p>
+        <div className="pointer-events-none relative z-[3] flex-none px-[3%] pt-[clamp(18px,4svh,40px)] text-center md:px-[6%]">
+          <p className="eyebrow text-[9px] font-extrabold tracking-[2.4px] text-ink md:text-[10px] md:tracking-[3.4px]">
+            A LITTLE CHANGE. A BIG IMPACT.
+          </p>
+          <p className="hero-description mt-[clamp(8px,1.4svh,14px)] text-[8.5px] font-bold tracking-[1.4px] text-muted md:text-[10px] md:tracking-[2.4px]">
+            EVERY JOURNEY STARTS WITH A LITTLE MOMENTUM.
+          </p>
         </div>
       </div>
 
-      <footer className="hero-footer">
+      {/* ---------- Bottom progress ---------- */}
+      <footer className="absolute inset-x-[5%] bottom-[18px] z-[6] flex items-center gap-2.5 text-[9px] font-extrabold tracking-[1.2px] md:inset-x-[6%] md:bottom-6 md:gap-4 md:text-[10px] md:tracking-[2px]">
         <span>SCROLL TO DRIVE</span>
-        <div className="scroll-track">
-          <span />
+        <div className="scroll-track h-[3px] flex-1 overflow-hidden rounded-[3px] bg-[#d8d9d0]">
+          <span className="block h-full w-full rounded-[inherit] bg-linear-to-r from-green-dark to-green" />
         </div>
-        <span className="progress-label" id="progress-label">
+        <span className="min-w-[52px] text-right tabular-nums" id="progress-label">
           01 / 04
         </span>
       </footer>

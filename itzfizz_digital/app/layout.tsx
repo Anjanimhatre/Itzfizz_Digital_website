@@ -28,8 +28,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bebas.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${bebas.variable} ${dmSans.variable} scroll-smooth motion-reduce:scroll-auto`}
+    >
+      <body className="overflow-x-hidden bg-paper font-body text-ink antialiased">
+        {children}
+      </body>
     </html>
   );
 }
